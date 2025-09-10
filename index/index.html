@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Tienda</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ESTILOS -->
+  <style>
+    nav a {
+      color: #4B5563;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    nav a:hover {
+      color: #1E40AF;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f7fafc;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+  <!-- NAVBAR -->
+  <nav class="bg-white shadow-lg p-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold">Mi Tienda</h1>
+    <ul class="flex space-x-6">
+      <li><a href="#" onclick="showPage('inicio')">Inicio</a></li>
+      <li><a href="#" onclick="showPage('productos')">Productos</a></li>
+      <li><a href="#" onclick="showPage('carrito')">Carrito</a></li>
+      <li><a href="#" onclick="showPage('contacto')">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <!-- SECCIONES -->
+  <section id="inicio" class="page p-6">
+    <h2 class="text-3xl font-semibold mb-4">Bienvenido a Mi Tienda</h2>
+    <p>Explora nuestros productos y disfruta de las mejores ofertas.</p>
+  </section>
+
+  <section id="productos" class="page p-6 hidden">
+    <h2 class="text-3xl font-semibold mb-4">Nuestros Productos</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- Producto 1 -->
+      <div class="bg-white p-4 shadow rounded-lg">
+        <img src="img/producto1.jpg" alt="Producto 1" class="w-full h-40 object-cover mb-2 rounded-md">
+        <h3 class="text-xl font-bold">Producto 1</h3>
+        <p class="text-gray-600">$10.00</p>
+        <button onclick="addToCart('Producto 1', 10, 'img/producto1.jpg')" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg">Añadir al carrito</button>
+      </div>
+
+      <!-- Producto 2 -->
+      <div class="bg-white p-4 shadow rounded-lg">
+        <img src="img/producto2.jpg" alt="Producto 2" class="w-full h-40 object-cover mb-2 rounded-md">
+        <h3 class="text-xl font-bold">Producto 2</h3>
+        <p class="text-gray-600">$15.00</p>
+        <button onclick="addToCart('Producto 2', 15, 'img/producto2.jpg')" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg">Añadir al carrito</button>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="carrito" class="page p-6 hidden">
+    <h2 class="text-3xl font-semibold mb-4">Carrito</h2>
+    <div id="cart-items" class="space-y-4"></div>
+  </section>
+
+  <section id="contacto" class="page p-6 hidden">
+    <h2 class="text-3xl font-semibold mb-4">Contáctanos</h2>
+    <form id="contactForm" class="bg-white p-6 shadow-md rounded-lg">
+      <input type="text" id="nombre" placeholder="Nombre" class="w-full p-2 border rounded-lg mb-4">
+      <input type="email" id="email" placeholder="Correo" class="w-full p-2 border rounded-lg mb-4">
+      <textarea id="mensaje" placeholder="Mensaje" class="w-full p-2 border rounded-lg mb-4"></textarea>
+      <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg">Enviar</button>
+    </form>
+  </section>
+
+  <!-- SCRIPT -->
+  <script>
+    let cart = [];
+
+    function showPage(pageId) {
+      const pages = document.querySelectorAll(".page");
+      pages.forEach(page => page.classList.add("hidden"));
+      document.getElementById(pageId).classList.remove("hidden");
+    }
+
+    function addToCart(name, price, imageSrc) {
+      cart.push({ name, price, imageSrc });
+      renderCart();
+    }
+
+    function renderCart() {
+      const cartItemsContainer = document.getElementById("cart-items");
+      cartItemsContainer.innerHTML = "";
+
+      if (cart.length === 0) {
+        cartItemsContainer.innerHTML = "<p>El carrito está vacío.</p>";
+        return;
+      }
+
+      cart.forEach(item => {
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "flex items-center bg-white p-4 rounded-lg shadow";
+        itemDiv.innerHTML = `
+          <img src="${item.imageSrc}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md">
+          <div class="ml-4">
+            <h4 class="text-xl font-semibold">${item.name}</h4>
+            <p class="text-gray-600">$${item.price.toFixed(2)}</p>
+          </div>
+        `;
+        cartItemsContainer.appendChild(itemDiv);
+      });
+    }
+
+    document.getElementById("contactForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const nombre = document.getElementById("nombre").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const mensaje = document.getElementById("mensaje").value.trim();
+
+      if (!nombre || !email || !mensaje) {
+        alert("Por favor, completa todos los campos.");
+        return;
+      }
+
+      if (!/\S+@\S+\.\S+/.test(email)) {
+        alert("Por favor, ingresa un correo válido.");
+        return;
+      }
+
+      alert("Mensaje enviado con éxito.");
+      this.reset();
+    });
+  </script>
+
+</body>
+</html>
